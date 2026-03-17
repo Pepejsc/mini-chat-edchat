@@ -1,17 +1,34 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #ece5dd;
+    background: #dddbd1; /* Fondo un poco más oscuro para que el chat resalte en PC */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Usamos dvh para que la barra del navegador móvil no tape el input */
+    height: 100vh;
+    height: 100dvh; 
 }
 
 .chat-container {
+    width: 100%;
     max-width: 600px;
-    margin: auto;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    border: 1px solid #ccc;
     background: #ece5dd;
+    position: relative;
+}
+
+/* --- Ajustes para pantallas grandes (Escritorio/Tablets) --- */
+@media (min-width: 600px) {
+    .chat-container {
+        height: 90%; /* No ocupa todo el alto en PC */
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Sombra elegante */
+        overflow: hidden; /* Mantiene los bordes curvos con el header */
+        border: 1px solid #ccc;
+    }
 }
 
 header {
@@ -19,46 +36,48 @@ header {
     color: white;
     padding: 15px;
     font-size: 18px;
+    font-weight: bold;
+    z-index: 10;
 }
 
 #chat {
     flex: 1;
     overflow-y: auto;
-    padding: 10px;
+    padding: 15px 10px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 /* Burbujas de mensaje */
 .msg {
-    max-width: 70%;
-    padding: 10px 14px;
-    font-size: 14px;
+    max-width: 75%;
+    padding: 8px 12px;
+    font-size: 15px;
     position: relative;
     display: inline-block;
     word-wrap: break-word;
-    margin-bottom: 6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
 
-/* Mensajes propios: alineados derecha, burbuja verde */
+/* Mensajes propios */
 .me {
     align-self: flex-end;
     background: #dcf8c6;
-    border-radius: 15px 15px 0 15px;
+    border-radius: 12px 12px 0 12px;
 }
 
-/* Mensajes de otros: alineados izquierda, burbuja blanca */
+/* Mensajes de otros */
 .other {
     align-self: flex-start;
     background: white;
-    border-radius: 15px 15px 15px 0;
+    border-radius: 12px 12px 12px 0;
 }
 
 /* Hora de mensaje */
 .time {
-    font-size: 10px;
-    color: gray;
+    font-size: 11px;
+    color: #888;
     margin-top: 4px;
     text-align: right;
     display: block;
@@ -70,21 +89,37 @@ header {
     background: #f0f0f0;
     padding: 10px;
     gap: 8px;
+    align-items: center;
 }
 
 input {
     flex: 1;
-    padding: 10px;
-    border-radius: 20px;
+    padding: 12px 15px;
+    border-radius: 24px;
     border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px; /* CRÍTICO: Previene el auto-zoom en iOS Safari */
+}
+
+input:focus {
+    border-color: #25d366;
 }
 
 button {
     background: #25d366;
     border: none;
     color: white;
-    padding: 10px 16px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #20ba56;
 }
