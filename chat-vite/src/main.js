@@ -3,16 +3,16 @@ import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/fi
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // ------------------------
-// CONFIGURACIÓN DE FIREBASE
+// CONFIGURACIÓN DE FIREBASE (Segura)
 // ------------------------
 const firebaseConfig = {
-    apiKey: "AIzaSyCiTxn5cWc3hmqK_aI-0NtGAHkDGaVOTpk",
-    authDomain: "mini-chat-e030b.firebaseapp.com",
-    databaseURL: "https://mini-chat-e030b-default-rtdb.firebaseio.com",
-    projectId: "mini-chat-e030b",
-    storageBucket: "mini-chat-e030b.firebasestorage.app",
-    messagingSenderId: "943892148257",
-    appId: "1:943892148257:web:8a62245609cb630c82f360"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
