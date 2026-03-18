@@ -29,16 +29,18 @@ const passwordInput = document.getElementById("password-input");
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const loginError = document.getElementById("login-error");
+
 const chatContainer = document.getElementById("chat");
 const msgInput = document.getElementById("msg");
 const sendBtn = document.getElementById("send-btn");
+
+const toggleStickersBtn = document.getElementById("toggle-stickers-btn");
+const stickerPanel = document.getElementById("sticker-panel");
 
 let username = "";
 const roomId = new URLSearchParams(window.location.search).get("room") || "public";
 const chatRef = ref(db, "rooms/" + roomId + "/messages");
 let isListening = false;
-
-// Guardamos el momento exacto en el que el usuario entra para no notificar mensajes viejos
 const appStartTime = Date.now(); 
 
 // ------------------------
@@ -50,7 +52,6 @@ onAuthStateChanged(auth, (user) => {
         chatScreen.style.display = "flex";
         username = user.email.split('@')[0]; 
         
-        // Pedir permiso para notificaciones al iniciar sesión con éxito
         if ("Notification" in window && Notification.permission !== "granted") {
             Notification.requestPermission();
         }
@@ -72,11 +73,7 @@ loginBtn.addEventListener("click", () => {
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
     
-    if(!email || !password) {
-        loginError.innerText = "Ingresa correo y contraseña.";
-        loginError.style.display = "block";
-        return;
-    }
+    if(!email || !password) return;
 
     signInWithEmailAndPassword(auth, email, password)
         .then(() => {
@@ -95,11 +92,12 @@ logoutBtn.addEventListener("click", () => {
     signOut(auth).then(() => {
         chatContainer.innerHTML = ""; 
         isListening = false;
+        stickerPanel.style.display = "none";
     });
 });
 
 // ------------------------
-// ENVIAR MENSAJES
+// ENVIAR MENSAJES DE TEXTO
 // ------------------------
 function send() {
     const text = msgInput.value.trim();
@@ -119,6 +117,38 @@ msgInput.addEventListener("keypress", (e) => {
 });
 
 // ------------------------
+// GENERADOR Y LÓGICA DE STICKERS
+// ------------------------
+toggleStickersBtn.addEventListener("click", () => {
+    stickerPanel.style.display = stickerPanel.style.display === "none" ? "flex" : "none";
+});
+
+// ¡AQUÍ ESTÁ LA MAGIA! Cambia el 20 por la cantidad total de stickers que tengas
+const TOTAL_STICKERS = 20; 
+
+for (let i = 1; i <= TOTAL_STICKERS; i++) {
+    const img = document.createElement("img");
+    img.src = `./stickers/${i}.webp`; 
+    img.className = "sticker-option";
+    img.alt = `sticker${i}`;
+    
+    // Al hacer clic en el sticker generado, se envía a Firebase
+    img.addEventListener("click", () => {
+        push(chatRef, {
+            type: "sticker",
+            url: img.src,
+            user: username,
+            time: Date.now()
+        });
+        
+        // Ocultamos el panel después de enviar
+        stickerPanel.style.display = "none"; 
+    });
+    
+    stickerPanel.appendChild(img);
+}
+
+// ------------------------
 // CARGAR MENSAJES Y NOTIFICAR
 // ------------------------
 function loadMessages() {
@@ -126,32 +156,41 @@ function loadMessages() {
         const msg = data.val();
         const div = document.createElement("div");
         
-        div.className = "msg " + (msg.user === username ? "me" : "other");
+        let className = "msg " + (msg.user === username ? "me" : "other");
+        
+        if (msg.type === "sticker") {
+            className += " msg-sticker";
+        }
+        
+        div.className = className;
         
         const date = new Date(msg.time);
         const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
         const nameHtml = msg.user !== username ? `<span class="user-name">${msg.user}</span>` : '';
+
+        let contentHtml = "";
+        if (msg.type === "sticker") {
+            contentHtml = `<img src="${msg.url}" class="chat-sticker-img" alt="Sticker" />`;
+        } else {
+            contentHtml = `<div>${msg.text}</div>`;
+        }
 
         div.innerHTML = `
             ${nameHtml}
-            <div>${msg.text}</div>
-            <span class="time">${time}</span>
+            ${contentHtml}
+            <span class="time" style="${msg.type === 'sticker' ? 'text-shadow: 1px 1px 2px white;' : ''}">${time}</span>
         `;
         
         chatContainer.appendChild(div);
         chatContainer.scrollTop = chatContainer.scrollHeight;
 
-        // --- LÓGICA DE NOTIFICACIONES ---
-        // 1. Validar que el mensaje sea más nuevo que cuando abrimos la app
-        // 2. Validar que el mensaje NO lo envié yo
+        // Notificaciones
         if (msg.time > appStartTime && msg.user !== username) {
-            
-            // 3. Validar si la página está oculta (el usuario está en otra pestaña)
             if (document.hidden && Notification.permission === "granted") {
+                let notificationBody = msg.type === "sticker" ? "Te envió un sticker 🖼️" : msg.text;
+                
                 new Notification(`Nuevo mensaje de ${msg.user}`, {
-                    body: msg.text,
-                    // Ícono genérico de chat. Puedes cambiar el link por el logo de tu app
+                    body: notificationBody,
                     icon: "https://cdn-icons-png.flaticon.com/512/1041/1041916.png" 
                 });
             }

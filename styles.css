@@ -7,33 +7,33 @@ body {
     align-items: center;
     height: 100vh;
     height: 100dvh;
-    /* Soporte para navegadores móviles */
 }
 
-/* --- Contenedores Principales --- */
-.screen {
-    width: 100%;
-    height: 100%;
+/* --- Pantalla de Login (Responsive) --- */
+#login-screen {
+    background: #dddbd1;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* --- Pantalla de Login --- */
-#login-screen {
-    background: #ece5dd;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
 }
 
 .login-box {
     background: white;
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 90%;
-    max-width: 320px;
+    width: calc(100% - 40px);
+    max-width: 350px;
 }
 
 .login-box h2 {
@@ -47,7 +47,6 @@ body {
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 16px;
-    /* Evita zoom automático en iPhone */
     outline: none;
 }
 
@@ -71,6 +70,13 @@ body {
     background: #20ba56;
 }
 
+@media (max-width: 380px) {
+    .login-box {
+        padding: 20px;
+        max-width: 300px;
+    }
+}
+
 /* --- Pantalla del Chat --- */
 .chat-container {
     width: 100%;
@@ -82,12 +88,11 @@ body {
     position: relative;
 }
 
-/* Ajuste para pantallas de PC/Tablets */
 @media (min-width: 600px) {
     .chat-container {
         height: 90%;
         border-radius: 12px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
         overflow: hidden;
         border: 1px solid #ccc;
     }
@@ -103,7 +108,7 @@ header {
     justify-content: space-between;
     align-items: center;
     z-index: 10;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .logout-btn {
@@ -130,7 +135,7 @@ header {
     gap: 8px;
 }
 
-/* Burbujas de mensaje */
+/* --- Burbujas de mensaje --- */
 .msg {
     max-width: 75%;
     padding: 8px 12px;
@@ -138,7 +143,7 @@ header {
     position: relative;
     display: inline-block;
     word-wrap: break-word;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
 
 .me {
@@ -169,13 +174,27 @@ header {
     display: block;
 }
 
-/* Área de input de mensajes */
+/* --- Área de input y botones --- */
 .input-area {
     display: flex;
     background: #f0f0f0;
     padding: 10px;
     gap: 8px;
     align-items: center;
+    position: relative;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: transform 0.2s;
+}
+
+.icon-btn:hover {
+    transform: scale(1.1);
 }
 
 .input-area input {
@@ -191,7 +210,7 @@ header {
     border-color: #25d366;
 }
 
-.input-area button {
+.send-btn {
     background: #25d366;
     border: none;
     color: white;
@@ -203,4 +222,46 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* --- Panel y Estilos de Stickers --- */
+.sticker-panel {
+    position: absolute;
+    bottom: 70px;
+    left: 10px;
+    background: white;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 100;
+    
+    /* Mejoras para manejar muchos stickers */
+    max-width: 280px;
+    max-height: 250px; 
+    overflow-y: auto; 
+}
+
+.sticker-option {
+    width: 55px;
+    height: 55px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.sticker-option:hover {
+    transform: scale(1.2);
+}
+
+.msg-sticker {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.chat-sticker-img {
+    width: 120px;
+    height: auto;
 }
