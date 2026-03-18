@@ -1,15 +1,77 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #dddbd1; /* Fondo un poco más oscuro para que el chat resalte en PC */
+    background: #dddbd1;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Usamos dvh para que la barra del navegador móvil no tape el input */
     height: 100vh;
-    height: 100dvh; 
+    height: 100dvh;
+    /* Soporte para navegadores móviles */
 }
 
+/* --- Contenedores Principales --- */
+.screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- Pantalla de Login --- */
+#login-screen {
+    background: #ece5dd;
+}
+
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 90%;
+    max-width: 320px;
+}
+
+.login-box h2 {
+    margin: 0 0 10px 0;
+    text-align: center;
+    color: #075e54;
+}
+
+.login-box input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    /* Evita zoom automático en iPhone */
+    outline: none;
+}
+
+.login-box input:focus {
+    border-color: #25d366;
+}
+
+.login-box button {
+    background: #25d366;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.login-box button:hover {
+    background: #20ba56;
+}
+
+/* --- Pantalla del Chat --- */
 .chat-container {
     width: 100%;
     max-width: 600px;
@@ -20,13 +82,13 @@ body {
     position: relative;
 }
 
-/* --- Ajustes para pantallas grandes (Escritorio/Tablets) --- */
+/* Ajuste para pantallas de PC/Tablets */
 @media (min-width: 600px) {
     .chat-container {
-        height: 90%; /* No ocupa todo el alto en PC */
+        height: 90%;
         border-radius: 12px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Sombra elegante */
-        overflow: hidden; /* Mantiene los bordes curvos con el header */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
         border: 1px solid #ccc;
     }
 }
@@ -37,7 +99,26 @@ header {
     padding: 15px;
     font-size: 18px;
     font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     z-index: 10;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.logout-btn {
+    background: #128c7e;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.logout-btn:hover {
+    background: #0d6e63;
 }
 
 #chat {
@@ -57,24 +138,29 @@ header {
     position: relative;
     display: inline-block;
     word-wrap: break-word;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-/* Mensajes propios */
 .me {
     align-self: flex-end;
     background: #dcf8c6;
     border-radius: 12px 12px 0 12px;
 }
 
-/* Mensajes de otros */
 .other {
     align-self: flex-start;
     background: white;
     border-radius: 12px 12px 12px 0;
 }
 
-/* Hora de mensaje */
+.user-name {
+    font-size: 11px;
+    color: #075e54;
+    display: block;
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
 .time {
     font-size: 11px;
     color: #888;
@@ -83,7 +169,7 @@ header {
     display: block;
 }
 
-/* Área de input */
+/* Área de input de mensajes */
 .input-area {
     display: flex;
     background: #f0f0f0;
@@ -92,20 +178,20 @@ header {
     align-items: center;
 }
 
-input {
+.input-area input {
     flex: 1;
     padding: 12px 15px;
     border-radius: 24px;
     border: 1px solid #ccc;
     outline: none;
-    font-size: 16px; /* CRÍTICO: Previene el auto-zoom en iOS Safari */
+    font-size: 16px;
 }
 
-input:focus {
+.input-area input:focus {
     border-color: #25d366;
 }
 
-button {
+.input-area button {
     background: #25d366;
     border: none;
     color: white;
@@ -117,9 +203,4 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background 0.2s;
-}
-
-button:hover {
-    background: #20ba56;
 }

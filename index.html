@@ -1,32 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Mini Chat</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Mini Chat Seguro</title>
+    <link rel="stylesheet" href="./styles.css" />
 </head>
-
 <body>
 
-    <div class="chat-container">
+    <div id="login-screen" class="screen">
+        <div class="login-box">
+            <h2>Acceso al Chat</h2>
+            <input id="email-input" type="email" placeholder="Correo electrónico" />
+            <input id="password-input" type="password" placeholder="Contraseña" />
+            <button id="login-btn">Ingresar</button>
+            <p id="login-error" style="color: #d32f2f; font-size: 14px; display: none; text-align: center; margin-top: 5px;"></p>
+        </div>
+    </div>
 
+    <div id="chat-screen" class="chat-container" style="display: none;">
         <header>
-            Mini Chat
+            <span>Mini Chat</span>
+            <button id="logout-btn" class="logout-btn">Salir</button>
         </header>
 
         <div id="chat"></div>
 
         <div class="input-area">
-            <input id="msg" placeholder="Escribe un mensaje" />
+            <input id="msg" placeholder="Escribe un mensaje" autocomplete="off" />
             <button id="send-btn">➤</button>
         </div>
-
     </div>
 
-    <script type="module" src="script.js"></script>
-
+    <script type="module" src="./script.js"></script>
 </body>
-
 </html>
