@@ -15,9 +15,57 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
+
+// ------------------------
+// CONFIGURACIÓN DE ONESIGNAL
+// ------------------------
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+        appId: import.meta.env.VITE_ONESIGNAL_APP_ID,
+        notifyButton: {
+            enable: true, // Esto muestra una campanita para que acepten recibir notificaciones
+        },
+    });
+});
+
+// ------------------------
+// ENVIAR PUSH NOTIFICATION (OneSignal)
+// ------------------------
+async function sendPushNotification(mensaje) {
+    const body = {
+        app_id: import.meta.env.VITE_ONESIGNAL_APP_ID,
+        // Esto envía la notificación a todos los dispositivos suscritos (tú y Ali)
+        included_segments: ['Subscribed Users'], 
+        headings: { 
+            en: `Nuevo mensaje de ${username}`, 
+            es: `Nuevo mensaje de ${username}` 
+        },
+        contents: { 
+            en: mensaje, 
+            es: mensaje 
+        },
+        // Cuando toquen la notificación, los llevará directo al chat
+        url: "https://pepejsc.github.io/mini-chat-edchat/" 
+    };
+
+    try {
+        await fetch("https://onesignal.com/api/v1/notifications", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Basic ${import.meta.env.VITE_ONESIGNAL_API_KEY}`
+            },
+            body: JSON.stringify(body)
+        });
+    } catch (error) {
+        console.error("Error enviando notificación push:", error);
+    }
+}
 
 // ------------------------
 // VARIABLES DEL DOM Y ESTADO
@@ -109,6 +157,8 @@ function send() {
         time: Date.now()
     });
     msgInput.value = "";
+
+    sendPushNotification(text);
 }
 
 sendBtn.addEventListener("click", send);
@@ -142,7 +192,8 @@ for (let i = 1; i <= TOTAL_STICKERS; i++) {
         });
         
         // Ocultamos el panel después de enviar
-        stickerPanel.style.display = "none"; 
+        stickerPanel.style.display = "none";
+        sendPushNotification("Te envió un sticker 🖼️");
     });
     
     stickerPanel.appendChild(img);
