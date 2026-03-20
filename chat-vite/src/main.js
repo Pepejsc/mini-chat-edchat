@@ -174,7 +174,7 @@ toggleStickersBtn.addEventListener("click", () => {
 });
 
 // ¡AQUÍ ESTÁ LA MAGIA! Cambia el 20 por la cantidad total de stickers que tengas
-const TOTAL_STICKERS = 20; 
+const TOTAL_STICKERS = 100; 
 
 for (let i = 1; i <= TOTAL_STICKERS; i++) {
     const img = document.createElement("img");
